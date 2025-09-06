@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test AI Text Sorter</title>
+</head>
+<body>
+    <h1>AI Text Sorter Test</h1>
+    
+    <input type="file" id="fileInput" accept="image/*" />
+    <button id="processBtn" disabled>Process Note</button>
+    
+    <div id="results" style="margin-top: 20px;">
+        <h3>Results:</h3>
+        <p><strong>Original OCR:</strong> <span id="originalText"></span></p>
+        <p><strong>Corrected Text:</strong> <span id="correctedText"></span></p>
+        <p><strong>Category:</strong> <span id="category"></span></p>
+        <p><strong>Saved Path:</strong> <span id="savedPath"></span></p>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const processBtn = document.getElementById('processBtn');
+
+        fileInput.addEventListener('change', () => {
+            processBtn.disabled = !fileInput.files[0];
+        });
+
+        processBtn.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/api/process', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('originalText').textContent = result.data.original_text;
+                    document.getElementById('correctedText').textContent = result.data.corrected_text;
+                    document.getElementById('category').textContent = result.data.category.category;
+                    document.getElementById('savedPath').textContent = result.data.final_path;
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Connection error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

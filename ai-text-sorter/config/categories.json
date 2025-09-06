@@ -1,0 +1,24 @@
+{
+  "categories": {
+    "academic": {
+      "keywords": ["assignment", "homework", "lecture", "exam", "study"],
+      "patterns": ["due date", "professor", "course"]
+    },
+    "business": {
+      "keywords": ["meeting", "client", "project", "budget"],
+      "patterns": ["action items", "quarterly", "KPI"]
+    },
+    "personal": {
+      "keywords": ["journal", "thoughts", "plans"],
+      "patterns": ["to do", "reminder"]
+    },
+    "legal": {
+      "keywords": ["contract", "agreement", "court"],
+      "patterns": ["hereby", "party"]
+    },
+    "medical": {
+      "keywords": ["doctor", "prescription", "treatment"],
+      "patterns": ["allergies", "dosage"]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+app:
+  name: "AI Text Sorter"
+  version: "1.0.0"
+  debug: true
+
+server:
+  host: "127.0.0.1"
+  port: 5000
+
+ocr:
+  primary_engine: "easyocr"
+  languages: ["en"]
+
+nlp:
+  model: "distilbert-base-uncased"
+  max_length: 512
+  confidence_threshold: 0.7
+
+classification:
+  categories:
+    - academic
+    - business
+    - personal
+    - legal
+    - medical
+  auto_create_categories: true
+  similarity_threshold: 0.8
+
+storage:
+  upload_folder: "uploads"
+  output_folder: "sorted_documents"
+  log_folder: "logs"

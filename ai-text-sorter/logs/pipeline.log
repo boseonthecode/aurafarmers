@@ -1,0 +1,83 @@
+2025-09-06 12:43:45,727 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-09-06 12:43:47,329 - INFO - EasyOCR loaded
+2025-09-06 12:43:47,330 - INFO - Tesseract available
+2025-09-06 12:43:48,839 - INFO - Transformer zero-shot classifier ready
+2025-09-06 12:43:48,869 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-06 12:43:48,870 - INFO - [33mPress CTRL+C to quit[0m
+2025-09-06 12:43:48,871 - INFO -  * Restarting with stat
+2025-09-06 12:43:53,421 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-09-06 12:43:55,019 - INFO - EasyOCR loaded
+2025-09-06 12:43:55,019 - INFO - Tesseract available
+2025-09-06 12:43:57,104 - INFO - Transformer zero-shot classifier ready
+2025-09-06 12:43:57,112 - WARNING -  * Debugger is active!
+2025-09-06 12:43:57,115 - INFO -  * Debugger PIN: 579-942-443
+2025-09-06 13:03:33,418 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-09-06 13:03:35,019 - INFO - EasyOCR loaded
+2025-09-06 13:03:35,020 - INFO - Tesseract available
+2025-09-06 13:03:36,625 - INFO - Transformer zero-shot classifier ready
+2025-09-06 14:12:13,255 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-09-06 14:12:15,183 - INFO - EasyOCR loaded
+2025-09-06 14:12:15,184 - INFO - Tesseract available
+2025-09-06 14:12:16,889 - INFO - Transformer zero-shot classifier ready
+2025-09-06 14:13:47,440 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-09-06 14:13:48,915 - INFO - EasyOCR loaded
+2025-09-06 14:13:48,916 - INFO - Tesseract available
+2025-09-06 14:13:51,022 - INFO - Transformer zero-shot classifier ready
+2025-09-06 14:15:30,410 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-09-06 14:15:31,885 - INFO - EasyOCR loaded
+2025-09-06 14:15:31,886 - INFO - Tesseract available
+2025-09-06 14:15:33,444 - INFO - Transformer zero-shot classifier ready
+2025-09-06 14:17:21,451 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-09-06 14:17:22,949 - INFO - EasyOCR loaded
+2025-09-06 14:17:22,950 - INFO - Tesseract available
+2025-09-06 14:17:24,498 - INFO - Transformer zero-shot classifier ready
+2025-09-06 14:17:24,756 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-06 14:17:24,757 - INFO - [33mPress CTRL+C to quit[0m
+2025-09-06 14:17:24,758 - INFO -  * Restarting with stat
+2025-09-06 14:17:29,637 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-09-06 14:17:31,185 - INFO - EasyOCR loaded
+2025-09-06 14:17:31,185 - INFO - Tesseract available
+2025-09-06 14:17:32,719 - INFO - Transformer zero-shot classifier ready
+2025-09-06 14:17:32,971 - WARNING -  * Debugger is active!
+2025-09-06 14:17:32,973 - INFO -  * Debugger PIN: 579-942-443
+2025-09-06 14:18:42,962 - INFO - 127.0.0.1 - - [06/Sep/2025 14:18:42] "GET /api/health HTTP/1.1" 200 -
+2025-09-06 14:18:43,014 - INFO - 127.0.0.1 - - [06/Sep/2025 14:18:43] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-06 14:18:49,451 - INFO - 127.0.0.1 - - [06/Sep/2025 14:18:49] "[33mGET / HTTP/1.1[0m" 404 -
+2025-09-06 14:18:49,520 - INFO - 127.0.0.1 - - [06/Sep/2025 14:18:49] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-09-06 14:18:54,105 - INFO - 127.0.0.1 - - [06/Sep/2025 14:18:54] "[33mGET / HTTP/1.1[0m" 404 -
+2025-09-06 14:20:27,539 - INFO - Processing image: C:\Users\atish\onedrive\documents\ai-text-sorter\uploads\20250906_085027_phy.png
+2025-09-06 14:20:31,547 - INFO - Processing image: C:\Users\atish\onedrive\documents\ai-text-sorter\uploads\20250906_085031_phy.png
+2025-09-06 14:20:31,766 - INFO - HTTP Request: POST https://api.perplexity.ai/chat/completions "HTTP/1.1 400 Bad Request"
+2025-09-06 14:20:31,769 - ERROR - Perplexity API call failed: Error code: 400 - {'error': {'message': "Invalid model 'sonar-medium-online'. Permitted models can be found in the documentation at https://docs.perplexity.ai/getting-started/models.", 'type': 'invalid_model', 'code': 400}}
+2025-09-06 14:20:31,769 - WARNING - NLM processing error: Error code: 400 - {'error': {'message': "Invalid model 'sonar-medium-online'. Permitted models can be found in the documentation at https://docs.perplexity.ai/getting-started/models.", 'type': 'invalid_model', 'code': 400}} - Falling back to OCR text
+2025-09-06 14:20:35,495 - INFO - 127.0.0.1 - - [06/Sep/2025 14:20:35] "POST /api/process HTTP/1.1" 200 -
+2025-09-06 14:20:35,905 - INFO - HTTP Request: POST https://api.perplexity.ai/chat/completions "HTTP/1.1 400 Bad Request"
+2025-09-06 14:20:35,908 - ERROR - Perplexity API call failed: Error code: 400 - {'error': {'message': "Invalid model 'sonar-medium-online'. Permitted models can be found in the documentation at https://docs.perplexity.ai/getting-started/models.", 'type': 'invalid_model', 'code': 400}}
+2025-09-06 14:20:35,909 - WARNING - NLM processing error: Error code: 400 - {'error': {'message': "Invalid model 'sonar-medium-online'. Permitted models can be found in the documentation at https://docs.perplexity.ai/getting-started/models.", 'type': 'invalid_model', 'code': 400}} - Falling back to OCR text
+2025-09-06 14:20:37,426 - INFO - 127.0.0.1 - - [06/Sep/2025 14:20:37] "POST /api/process HTTP/1.1" 200 -
+2025-09-06 14:20:41,796 - INFO - Processing image: C:\Users\atish\onedrive\documents\ai-text-sorter\uploads\20250906_085041_WhatsApp_Image_2025-09-06_at_09.57.56.jpeg
+2025-09-06 14:20:45,489 - INFO - HTTP Request: POST https://api.perplexity.ai/chat/completions "HTTP/1.1 400 Bad Request"
+2025-09-06 14:20:45,490 - ERROR - Perplexity API call failed: Error code: 400 - {'error': {'message': "Invalid model 'sonar-medium-online'. Permitted models can be found in the documentation at https://docs.perplexity.ai/getting-started/models.", 'type': 'invalid_model', 'code': 400}}
+2025-09-06 14:20:45,490 - WARNING - NLM processing error: Error code: 400 - {'error': {'message': "Invalid model 'sonar-medium-online'. Permitted models can be found in the documentation at https://docs.perplexity.ai/getting-started/models.", 'type': 'invalid_model', 'code': 400}} - Falling back to OCR text
+2025-09-06 14:20:46,844 - INFO - 127.0.0.1 - - [06/Sep/2025 14:20:46] "POST /api/process HTTP/1.1" 200 -
+2025-09-06 14:30:12,085 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-09-06 14:30:13,567 - INFO - EasyOCR loaded
+2025-09-06 14:30:13,567 - INFO - Tesseract available
+2025-09-06 14:30:15,100 - INFO - Transformer zero-shot classifier ready
+2025-09-06 14:30:15,373 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-09-06 14:30:15,373 - INFO - [33mPress CTRL+C to quit[0m
+2025-09-06 14:30:15,375 - INFO -  * Restarting with stat
+2025-09-06 14:30:20,273 - WARNING - Neither CUDA nor MPS are available - defaulting to CPU. Note: This module is much faster with a GPU.
+2025-09-06 14:30:21,778 - INFO - EasyOCR loaded
+2025-09-06 14:30:21,778 - INFO - Tesseract available
+2025-09-06 14:30:23,326 - INFO - Transformer zero-shot classifier ready
+2025-09-06 14:30:23,630 - WARNING -  * Debugger is active!
+2025-09-06 14:30:23,633 - INFO -  * Debugger PIN: 579-942-443
+2025-09-06 14:33:41,722 - INFO - Processing image: C:\Users\atish\onedrive\documents\ai-text-sorter\uploads\20250906_090341_business.jpg
+2025-09-06 14:33:47,791 - INFO - HTTP Request: POST https://api.perplexity.ai/chat/completions "HTTP/1.1 400 Bad Request"
+2025-09-06 14:33:47,797 - ERROR - Perplexity API call failed: Error code: 400 - {'error': {'message': "Invalid model 'sonar-medium-online'. Permitted models can be found in the documentation at https://docs.perplexity.ai/getting-started/models.", 'type': 'invalid_model', 'code': 400}}
+2025-09-06 14:33:47,797 - WARNING - NLM processing error: Error code: 400 - {'error': {'message': "Invalid model 'sonar-medium-online'. Permitted models can be found in the documentation at https://docs.perplexity.ai/getting-started/models.", 'type': 'invalid_model', 'code': 400}} - Falling back to OCR text
+2025-09-06 14:33:50,084 - INFO - 127.0.0.1 - - [06/Sep/2025 14:33:50] "POST /api/process HTTP/1.1" 200 -
