@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes AI Enhancer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container { max-width: 800px; width: 100%; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 2.5em; color: #ffffff; font-weight: 600; }
+        h1 span { color: #00bfa5; }
+        #image-preview-container { min-height: 250px; border: 2px dashed #00bfa5; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; overflow: hidden; }
+        #image-preview-container p { color: #888; font-size: 1.2em; }
+        #image-preview { max-width: 100%; max-height: 400px; display: none; }
+        .button-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .btn { background-color: #00bfa5; color: #ffffff; border: none; padding: 15px; border-radius: 8px; font-size: 1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s ease, transform 0.1s ease; text-align: center; }
+        .btn:hover { background-color: #00897b; }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { background-color: #555; cursor: not-allowed; }
+        #image-upload { display: none; }
+        #loader { display: none; text-align: center; padding: 20px; }
+        .spinner { border: 4px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top: 4px solid #00bfa5; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .card { background-color: #1e1e1e; border-radius: 12px; padding: 20px; margin-bottom: 15px; border-left: 5px solid #00bfa5; }
+        .card h2 { margin-top: 0; color: #00bfa5; font-size: 1.4em; }
+        .card p { line-height: 1.6; white-space: pre-wrap; }
+        .suggestion { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #333; }
+        .suggestion:last-child { border-bottom: none; }
+        .suggestion a { color: #80cbc4; text-decoration: none; font-weight: bold; }
+        .suggestion a:hover { text-decoration: underline; }
+        .suggestion p { margin: 5px 0 0 0; color: #aaa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header><h1>Notes AI <span>Enhancer</span> 🚀</h1></header>
+        <main>
+            <div id="image-preview-container">
+                <p>Select an image of your notes</p>
+                <img id="image-preview" src="#" alt="Image preview" />
+            </div>
+            <input type="file" id="image-upload" accept="image/*">
+            <div class="button-container">
+                <label for="image-upload" class="btn">Pick from Gallery</label>
+                <button id="enhance-btn" class="btn">Enhance Notes</button>
+            </div>
+            <div id="loader"><div class="spinner"></div><p>AI is working its magic...</p></div>
+            <div id="error-message" style="color: #ff5252; text-align: center; margin-bottom: 20px;"></div>
+            <div id="results-container"></div>
+        </main>
+    </div>
+    <script>
+        const backendUrl = 'http://127.0.0.1:8000/process-notes';
+        const imageUpload = document.getElementById('image-upload');
+        const imagePreview = document.getElementById('image-preview');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        const previewText = imagePreviewContainer.querySelector('p');
+        const enhanceBtn = document.getElementById('enhance-btn');
+        const loader = document.getElementById('loader');
+        const resultsContainer = document.getElementById('results-container');
+        const errorMessageDiv = document.getElementById('error-message');
+        let selectedFile = null;
+
+        imageUpload.addEventListener('change', (event) => {
+            if (event.target.files.length > 0) {
+                selectedFile = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    previewText.style.display = 'none';
+                };
+                reader.readAsDataURL(selectedFile);
+                resultsContainer.innerHTML = '';
+                errorMessageDiv.textContent = '';
+            }
+        });
+
+        enhanceBtn.addEventListener('click', async () => {
+            if (!selectedFile) {
+                alert('Please select an image first.');
+                return;
+            }
+            loader.style.display = 'block';
+            enhanceBtn.disabled = true;
+            resultsContainer.innerHTML = '';
+            errorMessageDiv.textContent = '';
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            try {
+                const response = await fetch(backendUrl, { method: 'POST', body: formData });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessageDiv.textContent = `Error: ${error.message}`;
+            } finally {
+                loader.style.display = 'none';
+                enhanceBtn.disabled = false;
+            }
+        });
+
+        function displayResults(data) {
+            resultsContainer.innerHTML = '';
+            if (data.corrected_text) resultsContainer.appendChild(createCard('📝 Corrected Text', data.corrected_text));
+            if (data.autocompleted_notes) resultsContainer.appendChild(createCard('✨ Autocompleted Notes', data.autocompleted_notes));
+            if (data.summary) resultsContainer.appendChild(createCard('📌 Summary', data.summary));
+            if (data.suggestions && data.suggestions.length > 0) resultsContainer.appendChild(createSuggestionsCard('📚 Further Reading', data.suggestions));
+        }
+
+        function createCard(title, content) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const cardTitle = document.createElement('h2');
+            cardTitle.textContent = title;
+            const cardContent = document.createElement('p');
+            cardContent.textContent = content;
+            card.appendChild(cardTitle);
+            card.appendChild(cardContent);
+            return card;
+        }
+        
+        function createSuggestionsCard(title, suggestions) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const cardTitle = document.createElement('h2');
+            cardTitle.textContent = title;
+            card.appendChild(cardTitle);
+            suggestions.forEach(s => {
+                const suggestionDiv = document.createElement('div');
+                suggestionDiv.className = 'suggestion';
+                const link = document.createElement('a');
+                link.href = s.url;
+                link.textContent = s.title;
+                link.target = '_blank';
+                const description = document.createElement('p');
+                description.textContent = s.description;
+                suggestionDiv.appendChild(link);
+                suggestionDiv.appendChild(description);
+                card.appendChild(suggestionDiv);
+            });
+            return card;
+        }
+    </script>
+</body>
+</html>
