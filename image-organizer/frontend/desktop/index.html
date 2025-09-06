@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Organizer - Desktop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1em;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .upload-section {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 60px 40px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #999;
+        }
+
+        .upload-area.dragover {
+            border-color: #333;
+            background: #f9f9f9;
+        }
+
+        .upload-text {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 0 5px;
+        }
+
+        .btn:hover {
+            background: #555;
+        }
+
+        .btn-secondary {
+            background: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #777;
+        }
+
+        .btn-danger {
+            background: #999;
+        }
+
+        .btn-danger:hover {
+            background: #aaa;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            margin: 20px 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #333;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: 4px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .success {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .error {
+            background: #f8f8f8;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .directories-section {
+            padding: 40px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .directories-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .directories-header h2 {
+            font-size: 1.3em;
+            font-weight: 300;
+        }
+
+        .custom-directories {
+            margin-bottom: 30px;
+        }
+
+        .custom-directories h3 {
+            font-size: 1.1em;
+            font-weight: 400;
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .directory-form {
+            display: none;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        .form-group textarea {
+            height: 60px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .custom-dirs-list {
+            margin-bottom: 20px;
+        }
+
+        .custom-dir-item {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .custom-dir-info h4 {
+            font-size: 1em;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .custom-dir-info p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .categories-section {
+            border-top: 1px solid #e0e0e0;
+            padding: 40px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .category-card:hover {
+            background: #f0f0f0;
+            border-color: #ccc;
+        }
+
+        .category-card.custom {
+            background: #f8f8f8;
+            border-left: 4px solid #333;
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #333;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-size: 0.7em;
+        }
+
+        .category-name {
+            font-size: 1.1em;
+            font-weight: 400;
+            margin-bottom: 8px;
+            text-transform: capitalize;
+        }
+
+        .category-count {
+            font-size: 1.8em;
+            font-weight: 300;
+            color: #666;
+        }
+
+        .category-label {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            border-radius: 4px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.2em;
+            font-weight: 400;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 10px;
+            }
+            
+            .upload-area {
+                padding: 40px 20px;
+            }
+            
+            .upload-section, .directories-section, .categories-section {
+                padding: 20px;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .directories-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AI Image Organizer</h1>
+            <p>Upload images and let AI organize them into custom directories</p>
+        </div>
+
+        <div class="card">
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-text">Drag and drop images here or click to browse</div>
+                    <button class="btn" onclick="document.getElementById('fileInput').click()">
+                        Choose Images
+                    </button>
+                    <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
+                </div>
+                
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="status-message" id="statusMessage"></div>
+            </div>
+
+            <div class="directories-section">
+                <div class="directories-header">
+                    <h2>Custom Directories</h2>
+                    <button class="btn btn-secondary" onclick="toggleDirectoryForm()">
+                        Add Directory
+                    </button>
+                </div>
+
+                <div class="directory-form" id="directoryForm">
+                    <div class="form-group">
+                        <label for="dirName">Directory Name</label>
+                        <input type="text" id="dirName" placeholder="e.g., Vacation Photos">
+                    </div>
+                    <div class="form-group">
+                        <label for="dirDescription">Description</label>
+                        <textarea id="dirDescription" placeholder="Describe what types of images should go in this directory"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn" onclick="createDirectory()">Create Directory</button>
+                        <button class="btn btn-secondary" onclick="toggleDirectoryForm()">Cancel</button>
+                    </div>
+                </div>
+
+                <div class="custom-dirs-list" id="customDirsList">
+                    <div style="text-align: center; color: #666; padding: 20px;">
+                        <div class="loading"></div>
+                        <p style="margin-top: 10px;">Loading custom directories...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="categories-section">
+                <h2>All Categories</h2>
+                <div class="categories-grid" id="categoriesGrid">
+                    <div style="text-align: center; color: #666; grid-column: 1/-1;">
+                        <div class="loading"></div>
+                        <p style="margin-top: 10px;">Loading categories...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Images</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="images-grid" id="imagesGrid">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000';
+        
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const statusMessage = document.getElementById('statusMessage');
+        const categoriesGrid = document.getElementById('categoriesGrid');
+        const customDirsList = document.getElementById('customDirsList');
+        const directoryForm = document.getElementById('directoryForm');
+        const imageModal = document.getElementById('imageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const imagesGrid = document.getElementById('imagesGrid');
+
+        // Upload functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+            if (files.length > 0) {
+                uploadFiles(files);
+            }
+        });
+
+        uploadArea.addEventListener('click', (e) => {
+            // Only trigger file selection if clicking on the upload area itself, not child elements
+            if (e.target === uploadArea) {
+                fileInput.click();
+            }
+        });
+
+        function selectFiles() {
+            fileInput.click();
+        }
+
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                uploadFiles(files);
+            }
+        });
+
+        async function uploadFiles(files) {
+            progressBar.style.display = 'block';
+            statusMessage.style.display = 'none';
+            
+            let completedUploads = 0;
+            const totalFiles = files.length;
+            const results = [];
+
+            for (const file of files) {
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    const response = await fetch(`${API_BASE}/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    results.push(result);
+                    
+                    completedUploads++;
+                    const progress = (completedUploads / totalFiles) * 100;
+                    progressFill.style.width = `${progress}%`;
+
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    results.push({ error: `Failed to upload ${file.name}` });
+                    completedUploads++;
+                }
+            }
+
+            progressBar.style.display = 'none';
+            showUploadResults(results);
+            loadCategories();
+            fileInput.value = '';
+        }
+
+        function showUploadResults(results) {
+            const successCount = results.filter(r => r.success).length;
+            const errorCount = results.filter(r => r.error).length;
+            
+            let message = '';
+            if (successCount > 0 && errorCount === 0) {
+                message = `Successfully organized ${successCount} image${successCount > 1 ? 's' : ''}`;
+                
+                // Show where they were placed
+                const customCount = results.filter(r => r.is_custom_directory).length;
+                if (customCount > 0) {
+                    message += ` (${customCount} in custom directories)`;
+                }
+            } else if (successCount > 0 && errorCount > 0) {
+                message = `${successCount} images organized, ${errorCount} failed`;
+            } else {
+                message = `Failed to upload images`;
+            }
+            
+            statusMessage.className = successCount > 0 ? 'status-message success' : 'status-message error';
+            statusMessage.innerHTML = message;
+            statusMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Directory management
+        function toggleDirectoryForm() {
+            const form = document.getElementById('directoryForm');
+            if (form.style.display === 'none' || !form.style.display) {
+                form.style.display = 'block';
+                document.getElementById('dirName').focus();
+            } else {
+                form.style.display = 'none';
+                clearDirectoryForm();
+            }
+        }
+
+        function clearDirectoryForm() {
+            document.getElementById('dirName').value = '';
+            document.getElementById('dirDescription').value = '';
+        }
+
+        async function createDirectory() {
+            const name = document.getElementById('dirName').value.trim();
+            const description = document.getElementById('dirDescription').value.trim();
+
+            if (!name) {
+                alert('Please enter a directory name');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/custom-directories`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, description })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    toggleDirectoryForm();
+                    loadCustomDirectories();
+                    showStatusMessage(`Directory "${name}" created successfully`, 'success');
+                } else {
+                    alert(result.error || 'Failed to create directory');
+                }
+            } catch (error) {
+                console.error('Error creating directory:', error);
+                alert('Failed to create directory');
+            }
+        }
+
+        async function deleteDirectory(dirName) {
+            if (!confirm(`Are you sure you want to delete the "${dirName}" directory?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/custom-directories/${encodeURIComponent(dirName)}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    loadCustomDirectories();
+                    loadCategories();
+                    showStatusMessage(result.message, 'success');
+                } else {
+                    alert(result.error || 'Failed to delete directory');
+                }
+            } catch (error) {
+                console.error('Error deleting directory:', error);
+                alert('Failed to delete directory');
+            }
+        }
+
+        async function loadCustomDirectories() {
+            try {
+                const response = await fetch(`${API_BASE}/custom-directories`);
+                const directories = await response.json();
+                displayCustomDirectories(directories);
+            } catch (error) {
+                console.error('Error loading custom directories:', error);
+                customDirsList.innerHTML = '<div style="text-align: center; color: #666;">Error loading directories</div>';
+            }
+        }
+
+        function displayCustomDirectories(directories) {
+            if (Object.keys(directories).length === 0) {
+                customDirsList.innerHTML = `
+                    <div style="text-align: center; color: #666; padding: 20px;">
+                        <p>No custom directories yet. Create your first directory to organize images by your own categories.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            customDirsList.innerHTML = Object.entries(directories).map(([name, description]) => `
+                <div class="custom-dir-item">
+                    <div class="custom-dir-info">
+                        <h4>${name}</h4>
+                        <p>${description || 'No description'}</p>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteDirectory('${name}')">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE}/categories`);
+                const categories = await response.json();
+                displayCategories(categories);
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                categoriesGrid.innerHTML = '<div style="text-align: center; color: #666;">Error loading categories</div>';
+            }
+        }
+
+        function displayCategories(categories) {
+            if (Object.keys(categories).length === 0) {
+                categoriesGrid.innerHTML = `
+                    <div style="text-align: center; color: #666; grid-column: 1/-1;">
+                        <p>No categories yet. Upload some images to get started.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            categoriesGrid.innerHTML = Object.entries(categories)
+                .sort(([,a], [,b]) => b.count - a.count)
+                .map(([category, data]) => `
+                    <div class="category-card ${data.is_custom ? 'custom' : ''}" onclick="viewCategory('${category}')">
+                        ${data.is_custom ? '<div class="category-badge">Custom</div>' : ''}
+                        <div class="category-name">${category}</div>
+                        <div class="category-count">${data.count}</div>
+                        <div class="category-label">image${data.count > 1 ? 's' : ''}</div>
+                        ${data.description ? `<div class="category-label" style="margin-top: 8px; font-style: italic;">${data.description}</div>` : ''}
+                    </div>
+                `).join('');
+        }
+
+        async function viewCategory(category) {
+            modalTitle.textContent = `${category.charAt(0).toUpperCase() + category.slice(1)} Images`;
+            imagesGrid.innerHTML = '<div style="text-align: center; grid-column: 1/-1;"><div class="loading"></div><p style="margin-top: 10px;">Loading...</p></div>';
+            imageModal.style.display = 'block';
+
+            try {
+                const response = await fetch(`${API_BASE}/category/${category}`);
+                const data = await response.json();
+                
+                if (data.files && data.files.length > 0) {
+                    imagesGrid.innerHTML = data.files.map(filename => `
+                        <div class="image-item">
+                            <img src="${API_BASE}/image/${category}/${filename}" alt="${filename}" loading="lazy">
+                        </div>
+                    `).join('');
+                } else {
+                    imagesGrid.innerHTML = '<div style="text-align: center; grid-column: 1/-1;">No images found</div>';
+                }
+            } catch (error) {
+                console.error('Error loading category images:', error);
+                imagesGrid.innerHTML = '<div style="text-align: center; grid-column: 1/-1;">Error loading images</div>';
+            }
+        }
+
+        function closeModal() {
+            imageModal.style.display = 'none';
+        }
+
+        function showStatusMessage(message, type) {
+            statusMessage.className = `status-message ${type}`;
+            statusMessage.innerHTML = message;
+            statusMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        imageModal.addEventListener('click', (e) => {
+            if (e.target === imageModal) {
+                closeModal();
+            }
+        });
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCustomDirectories();
+        });
+
+        // Handle Enter key in directory form
+        document.getElementById('dirName').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                createDirectory();
+            }
+        });
+    </script>
+</body>
+</html>

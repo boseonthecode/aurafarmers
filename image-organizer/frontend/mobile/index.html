@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Organizer - Mobile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 1.4em;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .main-content {
+            padding: 15px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .upload-section {
+            padding: 25px 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .upload-area.active {
+            border-color: #333;
+            background: #f9f9f9;
+        }
+
+        .upload-text {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            cursor: pointer;
+            font-weight: 400;
+            margin: 0 5px;
+        }
+
+        .btn:active {
+            background: #555;
+        }
+
+        .btn-camera {
+            background: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #eee;
+            border-radius: 2px;
+            margin: 20px 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #333;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-size: 0.9em;
+            display: none;
+            text-align: center;
+        }
+
+        .success {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .error {
+            background: #f8f8f8;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .categories-section {
+            padding: 25px 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .categories-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .categories-header h2 {
+            flex: 1;
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+
+        .refresh-btn {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .refresh-btn:active {
+            background: #e0e0e0;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .category-card {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .category-card:active {
+            background: #f0f0f0;
+        }
+
+        .category-name {
+            font-size: 0.9em;
+            font-weight: 400;
+            margin-bottom: 8px;
+            text-transform: capitalize;
+        }
+
+        .category-count {
+            font-size: 1.4em;
+            font-weight: 300;
+            color: #666;
+        }
+
+        .category-label {
+            color: #999;
+            font-size: 0.8em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 95%;
+            height: 90%;
+            margin: 5% auto;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px;
+        }
+
+        .empty-state p {
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AI Image Organizer</h1>
+        <p>Upload images and let AI organize them</p>
+    </div>
+
+    <div class="main-content">
+        <div class="card">
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-text">Tap to select images or use camera</div>
+                    <div>
+                        <button class="btn" onclick="document.getElementById('fileInput').click()">
+                            Gallery
+                        </button>
+                        <button class="btn btn-camera" onclick="document.getElementById('cameraInput').click()">
+                            Camera
+                        </button>
+                    </div>
+                    <input type="file" id="fileInput" class="file-input" multiple accept="image/*">
+                    <input type="file" id="cameraInput" class="file-input" accept="image/*" capture="environment">
+                </div>
+                
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="status-message" id="statusMessage"></div>
+            </div>
+
+            <div class="categories-section">
+                <div class="categories-header">
+                    <h2>Categories</h2>
+                    <button class="refresh-btn" onclick="loadCategories()">↻</button>
+                </div>
+                <div class="categories-grid" id="categoriesGrid">
+                    <div style="text-align: center; color: #666; grid-column: 1/-1;">
+                        <div class="loading"></div>
+                        <p style="margin-top: 10px;">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Images</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="images-grid" id="imagesGrid">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000';
+        
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const cameraInput = document.getElementById('cameraInput');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const statusMessage = document.getElementById('statusMessage');
+        const categoriesGrid = document.getElementById('categoriesGrid');
+        const imageModal = document.getElementById('imageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const imagesGrid = document.getElementById('imagesGrid');
+
+        uploadArea.addEventListener('click', (e) => {
+            if (e.target === uploadArea) {
+                fileInput.click();
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                uploadFiles(files);
+            }
+        });
+
+        cameraInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                uploadFiles(files);
+            }
+        });
+
+        async function uploadFiles(files) {
+            progressBar.style.display = 'block';
+            statusMessage.style.display = 'none';
+            
+            let completedUploads = 0;
+            const totalFiles = files.length;
+            const results = [];
+
+            for (const file of files) {
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    const response = await fetch(`${API_BASE}/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    results.push(result);
+                    
+                    completedUploads++;
+                    const progress = (completedUploads / totalFiles) * 100;
+                    progressFill.style.width = `${progress}%`;
+
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    results.push({ error: `Failed to upload ${file.name}` });
+                    completedUploads++;
+                }
+            }
+
+            progressBar.style.display = 'none';
+            showUploadResults(results);
+            loadCategories();
+            fileInput.value = '';
+            cameraInput.value = '';
+        }
+
+        function showUploadResults(results) {
+            const successCount = results.filter(r => r.success).length;
+            const errorCount = results.filter(r => r.error).length;
+            
+            if (successCount > 0 && errorCount === 0) {
+                statusMessage.className = 'status-message success';
+                statusMessage.innerHTML = `${successCount} image${successCount > 1 ? 's' : ''} organized`;
+            } else if (successCount > 0 && errorCount > 0) {
+                statusMessage.className = 'status-message error';
+                statusMessage.innerHTML = `${successCount} organized, ${errorCount} failed`;
+            } else {
+                statusMessage.className = 'status-message error';
+                statusMessage.innerHTML = `Upload failed`;
+            }
+            
+            statusMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 4000);
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE}/categories`);
+                const categories = await response.json();
+                displayCategories(categories);
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                categoriesGrid.innerHTML = '<div class="empty-state"><p>Error loading categories</p></div>';
+            }
+        }
+
+        function displayCategories(categories) {
+            if (Object.keys(categories).length === 0) {
+                categoriesGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <p>No categories yet.<br>Upload images to get started.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            categoriesGrid.innerHTML = Object.entries(categories)
+                .sort(([,a], [,b]) => b - a)
+                .map(([category, count]) => `
+                    <div class="category-card" onclick="viewCategory('${category}')">
+                        <div class="category-name">${category}</div>
+                        <div class="category-count">${count}</div>
+                        <div class="category-label">image${count > 1 ? 's' : ''}</div>
+                    </div>
+                `).join('');
+        }
+
+        async function viewCategory(category) {
+            modalTitle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+            imagesGrid.innerHTML = '<div style="text-align: center; grid-column: 1/-1; padding: 40px;"><div class="loading"></div><p style="margin-top: 10px;">Loading...</p></div>';
+            imageModal.style.display = 'block';
+
+            try {
+                const response = await fetch(`${API_BASE}/category/${category}`);
+                const data = await response.json();
+                
+                if (data.files && data.files.length > 0) {
+                    imagesGrid.innerHTML = data.
